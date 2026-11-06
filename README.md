@@ -10,7 +10,7 @@ Editor de fotografías para esferas navideñas. Funciona completamente en el nav
 - Encuadre por arrastre, teclado y gestos táctiles; zoom de 1% a 2000% (deslizador hasta 400%). El 100% llena el círculo y empieza centrado. Se permite reducir la imagen y dejar fondo blanco.
 - Editor ampliado con opción de restablecer o cambiar la foto.
 - Vista previa de los nueve círculos y exportación directa a PDF, sin usar el diálogo de impresión del navegador.
-- Confirmación antes de exportar una hoja incompleta y antes de borrar todo.
+- Descarga de hojas completas, incompletas o sin fotografías, con confirmación cuando faltan fotos. Los espacios vacíos incluyen el fondo tenue, número y guía de recorte de la vista previa. Confirmación antes de borrar todo.
 - Guardado automático de imágenes y ajustes en `localStorage`. No hay backend, cuentas ni envío de fotografías a servidores.
 
 ## Tamaño de impresión

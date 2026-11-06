@@ -1,5 +1,5 @@
 import './style.css';
-import { PAGE, centers, drawPhoto } from './layout.js';
+import { PAGE, centers, drawPhoto, drawSlot } from './layout.js';
 const KEY='recuerdos-navidad-v1';
 const icons={star:'✦',upload:'<path d="M12 16V4m-4 4 4-4 4 4M4 16v4h16v-4"/>',download:'<path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/>',plus:'<path d="M12 5v14M5 12h14"/>',photo:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',check:'<path d="m5 12 4 4L19 6"/>',reset:'<path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/>',edit:'<path d="m15 4 5 5M4 20l5-1L21 7l-5-5L4 14z"/>',trash:'<path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/>'};
 function icon(name){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]||''}</svg>`;}
@@ -36,10 +36,9 @@ function announce(message){$('#toast').textContent=message;$('#toast').classList
 function count(){return photos.filter(Boolean).length;}
 function render(i){
  const p=photos[i],card=grid.children[i];drawPhoto(card.querySelector('canvas').getContext('2d'),images[i],p,600);
- const mini=paper.children[i],ctx=mini.getContext('2d');drawPhoto(ctx,images[i],p,360);
- if(!p){ctx.fillStyle='#f8f6f1';ctx.beginPath();ctx.arc(180,180,179,0,Math.PI*2);ctx.fill();ctx.fillStyle='#c6c6b8';ctx.font='27px Georgia';ctx.textAlign='center';ctx.fillText(String(i+1).padStart(2,'0'),180,190);}
+ const mini=paper.children[i],ctx=mini.getContext('2d');drawSlot(ctx,images[i],p,360,i);
  card.classList.toggle('has-photo',!!p);card.querySelector('.empty-upload').hidden=!!p;card.querySelector('.remove').hidden=!p;card.querySelector('.edit-button').disabled=!p;card.querySelector('input').disabled=!p;card.querySelector('input').value=p?.zoom||100;card.querySelector('output').textContent=`${p?.zoom||100}%`;
- $('#count').textContent=`${count()} / 9`;$('#clear-all').disabled=!count();$('#export').disabled=busy||!count();
+ $('#count').textContent=`${count()} / 9`;$('#clear-all').disabled=!count();$('#export').disabled=busy;
  if($('#editor').open && active===i)renderEditor();
 }
 function renderEditor(){drawPhoto($('#editor-canvas').getContext('2d'),images[active],photos[active],1000);$('#editor-range').value=photos[active].zoom;$('#editor-number').value=photos[active].zoom;}
@@ -92,13 +91,13 @@ attachCanvas($('#editor-canvas'),()=>active);
 function confirmAction(title,text,yes){return new Promise(resolve=>{const d=$('#confirm-dialog');$('#confirm-title').textContent=title;$('#confirm-text').textContent=text;$('#confirm-yes').textContent=yes;const finish=value=>{d.close();resolve(value);};$('#confirm-no').onclick=()=>finish(false);$('#confirm-yes').onclick=()=>finish(true);d.oncancel=e=>{e.preventDefault();finish(false);};d.showModal();$('#confirm-no').focus();});}
 $('#clear-all').onclick=async()=>{if(await confirmAction('¿Empezamos de nuevo?','Se eliminarán las fotografías y sus ajustes guardados en este navegador.','Sí, borrar todo')){photos=Array(9).fill(null);images=Array(9).fill(null);for(let i=0;i<9;i++)render(i);save();}};
 $('#export').onclick=async()=>{
- if(!count()||busy)return;
- if(count()<9 && !await confirmAction('Todavía quedan recuerdos por añadir',`Has cargado ${count()} de 9 fotografías. ¿Estás seguro de que quieres descargar el PDF? Los espacios vacíos conservarán su guía de recorte.`,'Sí, descargar PDF'))return;
+ if(busy)return;
+ if(count()<9 && !await confirmAction('Todavía quedan recuerdos por añadir',`Has cargado ${count()} de 9 fotografías. ¿Estás seguro de que quieres descargar el PDF? Los espacios vacíos se imprimirán como aparecen en la vista previa, con su número y guía de recorte.`,'Sí, descargar PDF'))return;
  busy=true;$('#export').disabled=true;$('#export').innerHTML='Preparando tu PDF…';
  try{const {jsPDF}=await import('jspdf');const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter',compress:true,precision:6});doc.setProperties({title:'Recuerdos de Navidad · Fotos de 7.5 cm',subject:'Imprimir en papel carta, tamaño real, escala 100%',creator:'Recuerdos de Navidad'});
- for(let i=0;i<9;i++){const c=centers[i];if(photos[i]){const cv=document.createElement('canvas');cv.width=1000;cv.height=1000;drawPhoto(cv.getContext('2d'),images[i],photos[i],1000);doc.addImage(cv.toDataURL('image/png'),'PNG',c.x-37.5,c.y-37.5,75,75,undefined,'FAST');}doc.setDrawColor(169,169,160);doc.setLineWidth(.15);doc.setLineDashPattern([.65,.85],0);doc.circle(c.x,c.y,37.5,'S');}
+ for(let i=0;i<9;i++){const c=centers[i];const cv=document.createElement('canvas');cv.width=1000;cv.height=1000;drawSlot(cv.getContext('2d'),images[i],photos[i],1000,i);doc.addImage(cv.toDataURL('image/png'),'PNG',c.x-37.5,c.y-37.5,75,75,undefined,'FAST');doc.setDrawColor(169,169,160);doc.setLineWidth(.15);doc.setLineDashPattern([.65,.85],0);doc.circle(c.x,c.y,37.5,'S');}
  doc.setLineDashPattern([],0);doc.save('recuerdos-navidad-carta-75mm.pdf');announce('PDF listo. Imprime en papel carta, a tamaño real (100%).');
- }catch(e){console.error(e);announce('No se pudo crear el PDF. Inténtalo de nuevo; tus fotos siguen aquí.');}finally{busy=false;$('#export').disabled=!count();$('#export').innerHTML=`${icon('download')} Descargar PDF`;}
+ }catch(e){console.error(e);announce('No se pudo crear el PDF. Inténtalo de nuevo; tus fotos siguen aquí.');}finally{busy=false;$('#export').disabled=false;$('#export').innerHTML=`${icon('download')} Descargar PDF`;}
 };
 for(let i=0;i<9;i++){if(photos[i])try{images[i]=await loadImage(photos[i].src);}catch{photos[i]=null;}render(i);}
 if(restored)announce('Tus recuerdos están aquí. Retoma tu hoja donde la dejaste.');

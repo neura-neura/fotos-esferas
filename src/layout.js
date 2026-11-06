@@ -20,3 +20,13 @@ export function drawPhoto(ctx, image, photo, size) {
   if (image && photo) { const r=imageRect(image,photo,size); ctx.drawImage(image,r.x,r.y,r.w,r.h); }
   ctx.restore();
 }
+
+// Share the printable content between the sheet preview and PDF, including empty slots.
+export function drawSlot(ctx, image, photo, size, index) {
+  drawPhoto(ctx, image, photo, size);
+  if (photo) return;
+  ctx.fillStyle = '#f8f6f1';
+  ctx.beginPath(); ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#c6c6b8'; ctx.font = `${size * .075}px Georgia`;
+  ctx.textAlign = 'center'; ctx.fillText(String(index + 1).padStart(2, '0'), size / 2, size * 190 / 360);
+}
