@@ -8,7 +8,7 @@ test('Photo editing persists and incomplete exports ask for confirmation',async(
  await page.reload();await expect(page.locator('#count')).toHaveText('1 / 9');await expect(page.locator('.card-controls output').first()).toHaveText('25%');
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('recuerdos-navidad-v1')));expect(stored.photos[0].x).toBeGreaterThan(0);
  await page.locator('#export').click();await expect(page.locator('#confirm-dialog')).toBeVisible();await page.locator('#confirm-no').click();await expect(page.locator('#confirm-dialog')).not.toBeVisible();
- await page.locator('#export').click();const download=page.waitForEvent('download');await page.locator('#confirm-yes').click();expect((await download).suggestedFilename()).toBe('recuerdos-navidad-carta-75mm.pdf');
+ await page.locator('#export').click();const download=page.waitForEvent('download');await page.locator('#confirm-yes').click();expect((await download).suggestedFilename()).toBe('recuerdos-navidad-carta-73mm.pdf');
 });
 test('All nine photos fit mobile and desktop layouts and export without confirmation',async({page})=>{
  await page.goto('/');await page.locator('#files').setInputFiles(Array(9).fill(fixture));await expect(page.locator('#count')).toHaveText('9 / 9');

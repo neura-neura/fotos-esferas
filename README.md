@@ -5,7 +5,7 @@ Editor de fotografías para esferas navideñas. Funciona completamente en el nav
 ## Funciones
 
 - Nueve fotos por hoja carta, en columnas escalonadas.
-- Círculos de **75 mm de diámetro**, con una guía de recorte punteada de 0.15 mm.
+- Círculos de **73 mm de diámetro**, con una guía de recorte punteada de 0.15 mm.
 - Carga individual, múltiple o arrastrando archivos sobre la página.
 - Encuadre por arrastre, teclado y gestos táctiles; zoom de 1% a 2000% (deslizador hasta 400%). El 100% llena el círculo y empieza centrado. Se permite reducir la imagen y dejar fondo blanco.
 - Editor ampliado con opción de restablecer o cambiar la foto.
@@ -17,17 +17,17 @@ Editor de fotografías para esferas navideñas. Funciona completamente en el nav
 
 Carta: **215.9 × 279.4 mm**, equivalente a 612 × 792 puntos PDF. [Referencia de tamaños de HP](https://kaas.hpcloud.hp.com/pdf-public/pdf_380033_en-US-1.pdf).
 
-La distribución usa tres columnas de tres círculos, con la columna central desplazada medio paso. Para un diámetro `d = 75 mm` y una separación mínima `g = 0.5 mm`:
+La distribución usa tres columnas de tres círculos, con la columna central desplazada medio paso. Para un diámetro `d = 73 mm` y una separación mínima `g = 0.5 mm`:
 
-- Paso vertical: `s = d + g = 75.5 mm`.
-- Paso horizontal: `sqrt(3) / 2 × s = 65.3849 mm`.
-- Ancho ocupado: `d + 2 × paso horizontal = 205.7698 mm`.
-- Alto ocupado: `d + 2.5 × s = 263.75 mm`.
-- Márgenes: 5.0651 mm a izquierda/derecha y 7.825 mm arriba/abajo.
+- Paso vertical: `s = d + g = 73.5 mm`.
+- Paso horizontal: `sqrt(3) / 2 × s = 63.6529 mm`.
+- Ancho ocupado: `d + 2 × paso horizontal = 200.3057 mm`.
+- Alto ocupado: `d + 2.5 × s = 256.75 mm`.
+- Márgenes: 7.7971 mm a izquierda/derecha y 11.325 mm arriba/abajo.
 
-Cada fotografía se rasteriza a 1000 × 1000 px y se coloca a 75 × 75 mm; la guía de recorte es vectorial. El PDF no incluye encabezados, instrucciones ni decoración.
+Cada fotografía se rasteriza a 1000 × 1000 px y se coloca a 73 × 73 mm; la guía de recorte es vectorial. El PDF no incluye encabezados, instrucciones ni decoración.
 
-**Imprime en papel carta con “Tamaño real” o “Escala 100%”. Desactiva “Ajustar a página”.** Los márgenes físicos de la impresora deben admitir al menos 5 mm. Comprueba con una regla el primer círculo impreso.
+**Imprime en papel carta con “Tamaño real” o “Escala 100%”. Desactiva “Ajustar a página”.** Los márgenes físicos de la impresora deben admitir al menos 7.7 mm. Comprueba con una regla el primer círculo impreso.
 
 ## Guardado y formatos
 

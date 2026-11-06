@@ -1,4 +1,4 @@
-export const PAGE = { width: 215.9, height: 279.4, diameter: 75, gap: .5, count: 9 };
+export const PAGE = { width: 215.9, height: 279.4, diameter: 73, gap: .5, count: 9 };
 const step = PAGE.diameter + PAGE.gap;
 const dx = step * Math.sqrt(3) / 2;
 const left = (PAGE.width - (PAGE.diameter + 2 * dx)) / 2;
